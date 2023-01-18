@@ -7,12 +7,15 @@
 #include <set>
 #include <algorithm>            // For min
 
-#include "Process.h"
-#include "QueueFactory.h"
+//#include "Process.h"
+//#include "QueueFactory.h"
+#include "Scheduler.h"
 
 
 
 /*---------------- Process Strategies ----------------*/
+
+/*
 
 // First-come First-serve
 double FCFS_avg(std::vector<Process> p_vec){ 
@@ -26,6 +29,7 @@ double FCFS_avg(std::vector<Process> p_vec){
 
     return total_time / double(p_vec.size());
 }
+
 
 
 // Shortest job first
@@ -50,6 +54,10 @@ double SJF_default_avg(std::vector<Process> p_vec){
     return total_time / double(p_vec.size());
 
 }
+
+
+*/
+
 
 
 /*
@@ -86,6 +94,9 @@ double SJF_r_times_avg(std::vector<Process> p_vec){
 }
 
 */
+
+/*
+
 
 // Earliest deadline first
 double EDF_avg(std::vector<Process> p_vec){
@@ -162,7 +173,7 @@ double RR_avg(std::vector<Process> p_vec, int q){
     return total_time / double(p_vec.size());
 }
 
-
+*/
 
 /*---------------- Main & initalization ----------------*/
 
@@ -190,21 +201,61 @@ std::vector<Process> create_p_vector_changed(){
 }
 
 
+void create_processes(std::vector<Process*> &vec){
+
+    vec.push_back(new Process(1, 8, 0, 10) );
+    vec.push_back(new Process(2, 5, 0, 9) );
+    vec.push_back(new Process(3, 4, 0, 9) );
+
+
+}
+
+
+
+
+double FCFS_avg(std::vector<Process*> p_vec){ 
+    double total_time = 0; 
+    double current_time = 0;
+
+    Scheduler S(p_vec, FCFS);
+    S.update_p_queue(0);
+
+    Process* p;
+
+    while((p = S.next_job()) != nullptr){
+
+        current_time += (*p).get_e_time();
+        total_time += current_time;
+
+        (*p).set_completed();
+    }
+    std::cout << "FCFS average: " << total_time / S.get_job_counter();
+
+
+    return total_time / S.get_job_counter();
+}
+
+
 
 int main(){
 
     // Create vector with processes 
-    std::vector<Process> p_vector = create_p_vector();
+    //std::vector<Process*> p_vector = create_p_vector();
 
+    // Create processes
+    std::vector<Process*> p_vector;
+    create_processes(p_vector);
 
     //Aufg 2
     // std::vector<Process> p_vector = create_p_vector_changed();
 
     // Call functions
-    std::cout << "FCFS average: " << FCFS_avg(p_vector) << std::endl;
+    FCFS_avg(p_vector);
+
+    /*
     std::cout << "SJF average: " << SJF_default_avg(p_vector) << std::endl;
     std::cout << "EDF average: " << EDF_avg(p_vector) << std::endl; 
     std::cout << "LLF average: " << LLF_avg(p_vector) << std::endl; 
     std::cout << "RR average: " << RR_avg(p_vector, 3) << std::endl; 
-    
+    */   
 }
