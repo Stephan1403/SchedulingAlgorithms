@@ -1,8 +1,8 @@
-
-#define SJF 0
-#define EDF 1
-#define LLF 2
-#define RR  3
+#define FCFS 0
+#define SJF  1
+#define EDF  2
+#define LLF  3
+#define RR   4
 
 
 class Process{
@@ -18,9 +18,12 @@ class Process{
 
             this->p_time = 0; 
             this->completed = false; 
+            this->scheduled = false; 
         }
 
         // ------- Overload -------- //
+
+    /*
         bool operator<(const Process& other) const{
             if(this->process_id < other.process_id)
                 return true;
@@ -39,8 +42,8 @@ class Process{
            
             return false;
         }
+    */
 
-        // -------- Overload ------- //
 
         // The value will be returned depending on the method
         int get_value(int method_id){
@@ -52,6 +55,7 @@ class Process{
                     return get_deadline();
                 case LLF:
                     return get_laxity();
+                case FCFS:
                 case RR:
                 default:
                     return Process::get_id();
@@ -72,7 +76,11 @@ class Process{
         // Calculate and return laxity of Process
         int get_laxity(){ return deadline - r_time - e_time; }
 
-        int is_completed(){ return completed; }
+        bool is_completed(){ return completed; }
+        void set_completed(){ this->p_time = this->e_time, this->completed = true; }
+
+        bool is_scheduled(){ return scheduled; }
+        void set_scheduled(){ this->scheduled = true; }
 
 
         // Give the process time to calculate for 'time' intervals, returns left time
@@ -97,6 +105,7 @@ class Process{
         int r_time;             // Ready time
         int deadline;
 
-        int p_time;             // Processed time
+        int p_time;             // Time the process had to calculate
         bool completed;
+        bool scheduled;         // assures, that the process only is added once
 };
