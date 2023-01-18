@@ -77,7 +77,7 @@ class Process{
         int get_laxity(){ return deadline - r_time - e_time; }
 
         bool is_completed(){ return completed; }
-        void set_completed(){ this->p_time = this->e_time, this->completed = true; }
+        void set_completed(){ give_p_time(this->get_e_time()); }    // Finish process by giving it all the required time -- non-preemitve scheduling
 
         bool is_scheduled(){ return scheduled; }
         void set_scheduled(){ this->scheduled = true; }
