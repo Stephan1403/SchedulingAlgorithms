@@ -188,17 +188,30 @@ std::vector<Process> create_p_vector(){
 }
 
 
-// Aufg 2
-// Change the index to change the order
-std::vector<Process> create_p_vector_changed(){
-    // Process (index, execution_time, ready_time, deadline)
-    std::vector<Process> p_vector;
-    p_vector.push_back( Process(3, 8, 0, 10) );
-    p_vector.push_back( Process(1, 5, 0, 9) );
-    p_vector.push_back( Process(2, 4, 0, 9) );
-    
-    return p_vector;
+
+double FCFS_avg(std::vector<Process*> p_vec){ 
+    double total_time = 0; 
+    double current_time = 0;
+
+    Scheduler S(p_vec, FCFS);
+    S.update_p_queue(0);
+    Process* p;
+
+    while((p = S.next_job()) != nullptr){
+
+        current_time += p->get_e_time();
+        total_time += current_time;
+
+        p->set_completed();
+    }
+    std::cout << "FCFS average: " << total_time / S.get_job_counter();
+
+    return total_time / S.get_job_counter();
 }
+
+
+
+
 
 
 void create_processes(std::vector<Process*> &vec){
@@ -210,30 +223,6 @@ void create_processes(std::vector<Process*> &vec){
 
 }
 
-
-
-
-double FCFS_avg(std::vector<Process*> p_vec){ 
-    double total_time = 0; 
-    double current_time = 0;
-
-    Scheduler S(p_vec, FCFS);
-    S.update_p_queue(0);
-
-    Process* p;
-
-    while((p = S.next_job()) != nullptr){
-
-        current_time += (*p).get_e_time();
-        total_time += current_time;
-
-        (*p).set_completed();
-    }
-    std::cout << "FCFS average: " << total_time / S.get_job_counter();
-
-
-    return total_time / S.get_job_counter();
-}
 
 
 
