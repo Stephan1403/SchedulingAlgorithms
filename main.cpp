@@ -12,51 +12,7 @@
 #include "Scheduler.h"
 
 
-
 /*---------------- Process Strategies ----------------*/
-
-/*
-
-// First-come First-serve
-double FCFS_avg(std::vector<Process> p_vec){ 
-    int total_time = 0; 
-    int current_time = 0;
-
-    for(auto& p : p_vec){
-        current_time += p.get_e_time();
-        total_time += current_time; 
-    }
-
-    return total_time / double(p_vec.size());
-}
-
-
-
-// Shortest job first
-double SJF_default_avg(std::vector<Process> p_vec){
-    int total_time = 0;
-    int current_time = 0;
-    
-
-    // Create queue
-    std::queue<Process> p_queue;
-    Queue_Creator qc(&p_queue, p_vec, SJF);
-    qc.update_queue(0, false);
-
-    while(!p_queue.empty()){
-        Process p = p_queue.front();
-        p_queue.pop();
-
-        current_time += p.get_e_time();
-        total_time += current_time; 
-    }
-
-    return total_time / double(p_vec.size());
-
-}
-
-
-*/
 
 
 
@@ -181,32 +137,6 @@ double RR_avg(std::vector<Process> p_vec, int q){
 
 /*---------------- Process Strategies ----------------*/
 
-// Shortest job first
-double SJF_default_avg(std::vector<Process*> p_vec){
-    double total_time = 0;
-    double current_time = 0;
-    
-    // Create scheduler
-    Scheduler S(p_vec, SJF);
-    S.update_p_queue(0);
-    Process* p;
-
-    while((p = S.next_job()) != nullptr){
-
-        current_time += p->get_e_time();
-        total_time += current_time;
-
-        p->set_completed();
-    }
-
-    std::cout << "SJF average: " << total_time / S.get_job_counter();
-
-    return total_time / S.get_job_counter();
-}
-
-
-
-
 double FCFS_avg(std::vector<Process*> p_vec){ 
     double total_time = 0; 
     double current_time = 0;
@@ -223,14 +153,84 @@ double FCFS_avg(std::vector<Process*> p_vec){
 
         p->set_completed();
     }
-    std::cout << "FCFS average: " << total_time / S.get_job_counter();
+    std::cout << "FCFS average: " << total_time / S.get_job_counter() << std::endl;
 
     return total_time / S.get_job_counter();
 }
 
 
 
+double SJF_avg(std::vector<Process*> p_vec){
+    double total_time = 0;
+    double current_time = 0;
+    
+    // Create scheduler
+    Scheduler S(p_vec, SJF);
+    S.update_p_queue(0);
+    Process* p;
 
+    while((p = S.next_job()) != nullptr){
+
+        current_time += p->get_e_time();
+        total_time += current_time;
+
+        p->set_completed();
+    }
+
+    std::cout << "SJF average: " << total_time / S.get_job_counter() << std::endl;
+
+    return total_time / S.get_job_counter();
+}
+
+
+
+double EDF_avg(std::vector<Process*> p_vec){
+    double total_time = 0;
+    double current_time = 0;
+    
+    // Create scheduler
+    Scheduler S(p_vec, EDF);
+    S.update_p_queue(0);
+    Process* p;
+
+    while((p = S.next_job()) != nullptr){
+
+        current_time += p->get_e_time();
+        total_time += current_time;
+
+        p->set_completed();
+    }
+
+    std::cout << "SJF average: " << total_time / S.get_job_counter() << std::endl;
+
+    return total_time / S.get_job_counter();
+
+}
+
+
+
+
+double LLF_avg(std::vector<Process*> p_vec){
+    double total_time = 0;
+    double current_time = 0;
+    
+    // Create scheduler
+    Scheduler S(p_vec, LLF);
+    S.update_p_queue(0);
+    Process* p;
+
+    while((p = S.next_job()) != nullptr){
+
+        current_time += p->get_e_time();
+        total_time += current_time;
+
+        p->set_completed();
+    }
+
+    std::cout << "LLF average: " << total_time / S.get_job_counter() << std::endl;
+
+    return total_time / S.get_job_counter();
+}
 
 
 
@@ -256,13 +256,23 @@ int main(){
 
     // Create processes
     std::vector<Process*> p_vector;
-    create_processes(p_vector);
-
-    //Aufg 2
-    // std::vector<Process> p_vector = create_p_vector_changed();
 
     // Call functions
+    create_processes(p_vector);                                     // Reset processes
     FCFS_avg(p_vector);
+
+    create_processes(p_vector);                                             
+    SJF_avg(p_vector);
+
+    create_processes(p_vector);
+    EDF_avg(p_vector);
+
+    create_processes(p_vector);
+    LLF_avg(p_vector);
+
+    create_processes(p_vector);
+    LLF_avg(p_vector);
+
 
     /*
     std::cout << "SJF average: " << SJF_default_avg(p_vector) << std::endl;
