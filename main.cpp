@@ -16,8 +16,7 @@ void create_processes(std::vector<Process*> &vec);
 
 /*---------------- Process Strategies ----------------*/
 
-double FCFS_avg(std::vector<Process*> p_vec){ 
-    create_processes(p_vec);                                        // Reset processes
+double FCFS_avg(std::vector<Process*> p_vec){
     int total_time = 0;
     int current_time = 0; 
 
@@ -40,7 +39,6 @@ double FCFS_avg(std::vector<Process*> p_vec){
 
 
 double SJF_avg(std::vector<Process*> p_vec){
-    create_processes(p_vec);                                        // Reset processes
     int total_time = 0;
     int current_time = 0; 
     
@@ -64,7 +62,6 @@ double SJF_avg(std::vector<Process*> p_vec){
 
 
 double EDF_avg(std::vector<Process*> p_vec){
-    create_processes(p_vec);                                        // Reset processes
     int total_time = 0;
     int current_time = 0; 
     
@@ -90,7 +87,6 @@ double EDF_avg(std::vector<Process*> p_vec){
 
 
 double LLF_avg(std::vector<Process*> p_vec){
-    create_processes(p_vec);                                        // Reset processes
     int total_time = 0;
     int current_time = 0; 
     
@@ -114,7 +110,6 @@ double LLF_avg(std::vector<Process*> p_vec){
 
 // Round Robin
 double RR_avg(std::vector<Process*> p_vec, int q, bool random_order){
-    create_processes(p_vec);                                        // Reset processes
     int total_time = 0;
     int current_time = 0; 
 
@@ -160,11 +155,12 @@ void create_processes(std::vector<Process*> &vec){
 
 
 void create_processes_with_r_times(std::vector<Process*> &vec){
-    
-
+    vec.push_back(new Process(1, 22, 0, 0) );
+    vec.push_back(new Process(2, 2, 0, 0) );
+    vec.push_back(new Process(3, 3, 4, 0) );
+    vec.push_back(new Process(4, 5, 4, 0) );
+    vec.push_back(new Process(5, 8, 4, 0) );
 }
-
-
 
 
 
@@ -176,16 +172,31 @@ int main(){
 
     // Create processes
     std::vector<Process*> p_vector;
+    std::vector<Process*> p_vector2;
 
     // Call Scheduler functions
-    FCFS_avg(p_vector);                                     
+    create_processes(p_vector);                                        // Reset processes
+    FCFS_avg(p_vector);
+
+    create_processes(p_vector);                                        // Reset processes
     SJF_avg(p_vector);
+
+    printf("With ready times: ");
+    create_processes_with_r_times(p_vector2);                          // Reset processes
+    SJF_avg(p_vector2);
+
+
+    create_processes(p_vector);                                        // Reset processes
     EDF_avg(p_vector);
+
+    create_processes(p_vector);                                        // Reset processes
     LLF_avg(p_vector);
 
     // Random robin normal order
+    create_processes(p_vector);                                        // Reset processes
     RR_avg(p_vector, 3, false);
 
     // Round Robin permutated
+    create_processes(p_vector);                                        // Reset processes
     RR_avg(p_vector, 3, true);
 }
