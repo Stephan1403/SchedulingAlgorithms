@@ -2,7 +2,8 @@
     #include "Process.h"
     #include <vector>
     #include <queue>
-    #include <algorithm>                // For min_element
+    #include <algorithm>                // For min_element, shuffle
+    #include <random>                   
 
 
 
@@ -18,16 +19,33 @@ class Scheduler{
             this->current_job = nullptr;
             this->current_time = 0;
             this->job_counter = 0; 
+
+            this->update_p_queue();                  // Set up queue
         }
 
-        // Returns the next available job / process assigned by the Scheduler
-        Process* next_job(){
+        /* Returns the next available job / process assigned by the Scheduler
+        In all cases but Round Robin next_job searches for new processes and sorts them inside the queue
+        */
+        Process* next_job(int time){
+            this->current_time = time;                      // Set current_time, if all processes are ready from the begining this value can be set to 0 each time
 
             // Check if last job needs more time
             if(current_job != nullptr){
-                if (!(*current_job).is_completed())
-                    ready_processes.push_back(current_job);     // Process not done yet
-                else 
+                if (!(*current_job).is_completed()){
+
+                    /* In case of Round Robin the process doen't have to be sorted
+                    but just put at the end of the procecss queue*/
+                    if(this->method_id == RR)
+                        p_queue.push(current_job);
+                    else{
+                        /* Push the not yet ready process back to the ready_processes 
+                        then sort the queue again
+                        */
+                        ready_processes.push_back(current_job); 
+                        update_p_queue(); 
+                    }
+                        
+                }else 
                     job_counter++;
             }
 
@@ -41,8 +59,7 @@ class Scheduler{
 
 
         // Look for new ready processes and add them to the ready queue
-        void update_p_queue(int time){
-            this->current_time = time;                                  // Update time
+        void update_p_queue(){
             update_ready_processes();
 
             // Move queue processes to ready_processes
@@ -70,24 +87,44 @@ class Scheduler{
         }
 
 
-        int get_job_counter(){ return this->job_counter;}
+        // Puts process queue in random order
+        void permutate_queue_random(){
+            std::vector<Process*> shuffled_vec;
 
+            // Move elements in vector
+            while(!p_queue.empty()){
+                shuffled_vec.push_back(p_queue.front());
+                p_queue.pop();
+            }
+
+            // Shuffle vector
+            auto rng = std::mt19937(std::random_device()());
+            std::shuffle(shuffled_vec.begin(), shuffled_vec.end(), rng);
+
+            // Put elements back in queue
+            for(auto ele: shuffled_vec)
+                this->p_queue.push(ele);
+        }
+
+
+        int get_job_counter(){ return this->job_counter;}
 
 
     private:
         // Check for any ready processes inside p_vector and add them to ready_processes
         void update_ready_processes(){
-           
 
             for(auto pro: this->p_vector){
 
-                if(!pro->is_scheduled() && pro->get_r_time() <= current_time){
+                if(!pro->is_scheduled() && pro->get_r_time() <= this->current_time){
                     // Add the ready process
                     ready_processes.push_back(pro);
                     pro->set_scheduled(); 
                 }
             }
         }
+
+       
 
 
         // ------------- Variables -------------- //
