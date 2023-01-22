@@ -103,7 +103,7 @@ double EDF_avg(std::vector<Process*> p_vec){
         p->set_completed();
     }
 
-    std::cout << "SJF average: " << (double)total_time / S.get_job_counter() << std::endl;
+    std::cout << "EDF average: " << (double)total_time / S.get_job_counter() << std::endl;
 
     return (double)total_time / S.get_job_counter();
 
@@ -203,9 +203,10 @@ int main(){
     create_processes(p_vector);                                        // Reset processes
     SJF_avg(p_vector);
 
-    printf("With ready times: ");
+    printf("\n/3 With ready times: ");
     create_processes_with_r_times(p_vector2);                          // Reset processes
     SJF_avg(p_vector2);
+    printf("\n");
 
 
     create_processes(p_vector);                                        // Reset processes
