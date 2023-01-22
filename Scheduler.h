@@ -29,7 +29,7 @@ class Scheduler{
         Process* next_job(int time){
             this->current_time = time;                      // Set current_time, if all processes are ready from the begining this value can be set to 0 each time
 
-            // Check if last job needs more time
+            // ----- Check if last job needs more time ----- //
             if(current_job != nullptr){
                 if (!(*current_job).is_completed()){
 
@@ -49,6 +49,13 @@ class Scheduler{
                     job_counter++;
             }
 
+
+            // ----- Check for ready processes ----- //
+            if(update_ready_processes())
+                update_p_queue();
+
+
+            // ----- Return process ----- //
             if(p_queue.empty())                                 // Set to nullptr if none available
                 current_job = nullptr;
             else    
@@ -111,8 +118,8 @@ class Scheduler{
 
 
     private:
-        // Check for any ready processes inside p_vector and add them to ready_processes
-        void update_ready_processes(){
+        // Check for any ready processes inside p_vector and add them to ready_processes, returns true if ready_processes is not empty
+        bool update_ready_processes(){
 
             for(auto pro: this->p_vector){
 
@@ -122,6 +129,8 @@ class Scheduler{
                     pro->set_scheduled(); 
                 }
             }
+
+            return p_vector.size();
         }
 
        
