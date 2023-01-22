@@ -37,7 +37,7 @@ double FCFS_avg(std::vector<Process*> p_vec){
 }
 
 
-
+/*
 double SJF_avg(std::vector<Process*> p_vec){
     int total_time = 0;
     int current_time = 0; 
@@ -57,6 +57,32 @@ double SJF_avg(std::vector<Process*> p_vec){
     std::cout << "SJF average: " << (double)total_time / S.get_job_counter() << std::endl;
 
     return (double)total_time / S.get_job_counter();
+}
+*/
+
+double SJF_avg(std::vector<Process*> p_vec){
+
+    int total_time = 0;
+    int current_time = 0; 
+    
+    // Create scheduler
+    Scheduler S(p_vec, SJF);
+    Process* p;
+
+    while((p = S.next_job(current_time)) != nullptr){
+
+        p->give_p_time(1);
+        current_time+=1;
+
+        if(p->is_completed())
+            total_time += ( current_time - p->get_r_time() );    // Add runtime of p which is time since started till now
+
+    }
+
+    std::cout << "SJF average: " << (double)total_time / S.get_job_counter() << std::endl;
+
+    return (double)total_time / S.get_job_counter();
+
 }
 
 
@@ -166,10 +192,6 @@ void create_processes_with_r_times(std::vector<Process*> &vec){
 
 
 int main(){
-
-    // Create vector with processes 
-    //std::vector<Process*> p_vector = create_p_vector();
-
     // Create processes
     std::vector<Process*> p_vector;
     std::vector<Process*> p_vector2;
