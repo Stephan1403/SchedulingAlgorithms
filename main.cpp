@@ -174,17 +174,17 @@ double RR_avg(std::vector<Process*> p_vec, int q, bool random_order){
 /*---------------- Main & initalization ----------------*/
 
 void create_processes(std::vector<Process*> &vec){
-    vec.push_back(new Process(1, 8, 0, 10) );
-    vec.push_back(new Process(2, 5, 0, 9) );
-    vec.push_back(new Process(3, 4, 0, 9) );
+    vec.push_back(new Process(1, 8, 0, 16) );
+    vec.push_back(new Process(2, 5, 0, 49) );
+    vec.push_back(new Process(3, 4, 0, 15) );
 }
 
 
 void create_processes_with_r_times(std::vector<Process*> &vec){
-    vec.push_back(new Process(1, 22, 0, 15) );
-    vec.push_back(new Process(2, 2, 0, 8) );
-    vec.push_back(new Process(3, 3, 4, 7) );
-    vec.push_back(new Process(4, 5, 4, 10) );
+    vec.push_back(new Process(1, 22, 0, 65) );
+    vec.push_back(new Process(2, 2, 0, 40) );
+    vec.push_back(new Process(3, 3, 4, 70) );
+    vec.push_back(new Process(4, 5, 4, 18) );
     vec.push_back(new Process(5, 8, 4, 25) );
 }
 
