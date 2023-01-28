@@ -42,7 +42,7 @@ class Scheduler{
                         then sort the queue again
                         */
                         ready_processes.push_back(current_job); 
-                        update_p_queue(); 
+                        update_p_queue();
                     }
                         
                 }else 
@@ -113,6 +113,11 @@ class Scheduler{
                 this->p_queue.push(ele);
         }
 
+        // Checks if any processes are left to process
+        bool processes_left(){
+            return this->p_vector.size();
+        }
+
 
         int get_job_counter(){ return this->job_counter;}
 
@@ -121,16 +126,21 @@ class Scheduler{
         // Check for any ready processes inside p_vector and add them to ready_processes, returns true if ready_processes is not empty
         bool update_ready_processes(){
 
-            for(auto pro: this->p_vector){
+            for(auto pro = p_vector.begin(); pro != p_vector.end(); ){
 
-                if(!pro->is_scheduled() && pro->get_r_time() <= this->current_time){
+                if(!(*pro)->is_scheduled() && (*pro)->get_r_time() <= this->current_time){
                     // Add the ready process
-                    ready_processes.push_back(pro);
-                    pro->set_scheduled(); 
+                    ready_processes.push_back(*pro);
+                    (*pro)->set_scheduled(); 
+
+                    pro = p_vector.erase(pro); 
+                }else{
+                    pro++;
                 }
+                
             }
 
-            return p_vector.size();
+            return ready_processes.size();
         }
 
        

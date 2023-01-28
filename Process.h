@@ -77,20 +77,26 @@ class Process{
         int get_laxity(){ return deadline - r_time - e_time; }
 
         bool is_completed(){ return completed; }
-        void set_completed(){ give_p_time(this->get_e_time()); }    // Finish process by giving it all the required time -- non-preemitve scheduling
+        void set_completed(int current_time){give_p_time(this->get_e_time(), current_time); }    // Finish process by giving it all the required time -- non-preemitve scheduling
 
         bool is_scheduled(){ return scheduled; }
         void set_scheduled(){ this->scheduled = true; }
 
 
         // Give the process time to calculate for 'time' intervals, returns left time
-        int give_p_time(int time){
+        int give_p_time(int time, int current_time){
             int new_p_time = p_time + time;
 
             if(new_p_time >= e_time){
                 // More time than needed
                 p_time = e_time; 
                 this->completed = true;
+
+                // Check if deadline is met
+                if(current_time > deadline){
+                    printf("    ! Deadline for process %i failed\n", this->process_id);
+                }   
+
                 return new_p_time - e_time; 
             }
 
