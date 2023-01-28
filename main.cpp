@@ -7,8 +7,6 @@
 #include <set>
 #include <algorithm>            // For min
 
-//#include "Process.h"
-//#include "QueueFactory.h"
 #include "Scheduler.h"
 
 void create_processes(std::vector<Process*> &vec);
@@ -37,29 +35,6 @@ double FCFS_avg(std::vector<Process*> p_vec){
 }
 
 
-/*
-double SJF_avg(std::vector<Process*> p_vec){
-    int total_time = 0;
-    int current_time = 0; 
-    
-    // Create scheduler
-    Scheduler S(p_vec, SJF);
-    Process* p;
-
-    while((p = S.next_job(current_time)) != nullptr){
-
-        current_time += p->get_e_time();
-        total_time += current_time;
-
-        p->set_completed(current_time);
-    }
-
-    std::cout << "SJF average: " << (double)total_time / S.get_job_counter() << std::endl;
-
-    return (double)total_time / S.get_job_counter();
-}
-*/
-
 double SJF_avg(std::vector<Process*> p_vec){
 
     int total_time = 0;
@@ -75,7 +50,7 @@ double SJF_avg(std::vector<Process*> p_vec){
         current_time+=1;
 
         if(p->is_completed())
-            total_time += ( current_time - p->get_r_time() );    // Add runtime of p which is time since started till now
+            total_time += ( current_time - p->get_r_time() );    
 
     }
 
